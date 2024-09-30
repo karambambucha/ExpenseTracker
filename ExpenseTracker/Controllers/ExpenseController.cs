@@ -41,11 +41,17 @@ namespace ExpenseTracker.Controllers
             return await expenses.ToListAsync();
         }
         [HttpPost]
-        public async Task<ActionResult<Expense>> PostExpense(Expense expense)
+        public async Task<ActionResult<Expense>> PostExpense(string description, decimal amount)
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            expense.UserId = userId;
-            _context.Expenses.Add(expense);
+            var expense = new Expense()
+            {
+                UserId = userId,
+                Description = description,
+                Amount = amount,
+                Date = DateTime.UtcNow
+            };
+            _context.Entry(expense).State = EntityState.Added;
             await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(GetExpenses), new { id = expense.Id }, expense);
         }

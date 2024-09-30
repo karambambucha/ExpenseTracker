@@ -15,6 +15,10 @@ namespace ExpenseTracker.Data
         {
             options.UseNpgsql(_configuration.GetConnectionString("Database"));
         }
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.UseSerialColumns();
+        }
         public DbSet<User> Users {  get; set; } 
         public DbSet<Expense> Expenses { get; set; }
     }
